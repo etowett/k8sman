@@ -1,0 +1,40 @@
+version: '3'
+
+tasks:
+  run:
+    cmds:
+      - export ENV=local
+      - export PORT=4080
+      - export LOG_LEVEL=debug
+      - export LOG_MODE=development
+      - go run cmd/server/main.go
+
+  up:
+    cmds:
+      - docker compose up -d
+
+  ps:
+    cmds:
+      - docker compose ps
+
+  logs:
+    cmds:
+      - docker compose logs -f
+
+  stop:
+    cmds:
+      - docker compose stop
+
+  rm:
+    deps:
+      - stop
+    cmds:
+      - docker compose rm -f
+
+  docker:
+    cmds:
+      - docker build --build-arg TAGS=citizix --build-arg BUILD_ID=1 --build-arg BUILD_TAG=latest -t ektowett/k8sman:latest .
+
+  compile:
+    cmds:
+      - go build -o /tmp/k8sman cmd/server/main.go

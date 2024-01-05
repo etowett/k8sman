@@ -1,0 +1,23 @@
+version: "3.9"
+
+services:
+  k8sman:
+    image: cosmtrek/air:latest
+    # restart: always
+    working_dir: /k8sman
+    ports:
+      - 4080:4080
+    environment:
+      - PORT=4080
+      - ENV=local
+      - APP_NAME=k8sman
+      - LOG_LEVEL=debug
+      - GOTOOLCHAIN=go1.21.5
+    volumes:
+      - .:/k8sman
+      - ~/tmp/goair/k8sman/pkg:/go/pkg
+    networks:
+      - k8sman_net
+
+networks:
+  k8sman_net:

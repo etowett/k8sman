@@ -1,0 +1,13 @@
+@baseUrl = http://127.0.0.1:4080
+
+### Get Healthz
+GET {{baseUrl}}/healthz HTTP/1.1
+Accept: application/json
+
+### Get Deployments
+GET {{baseUrl}}/deployments HTTP/1.1
+Accept: application/json
+
+### Get Pods
+GET {{baseUrl}}/pods?namespace=live HTTP/1.1
+Accept: application/json
