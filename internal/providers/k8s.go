@@ -32,6 +32,7 @@ func NewK8SProvider(env string) *AppK8SProvider {
 	)
 
 	if env == "local" {
+		slog.Info("Using local kubeconfig file for local env")
 		userHomeDir, err := os.UserHomeDir()
 		if err != nil {
 			log.Fatalf("could not user home dir: %v", err)
@@ -44,6 +45,7 @@ func NewK8SProvider(env string) *AppK8SProvider {
 			log.Fatalf("could not get kubernetes config from home: %v", err)
 		}
 	} else {
+		slog.Info("Using in-cluster config for kubeconfig")
 		// creates the in-cluster config
 		kubeConfig, err = rest.InClusterConfig()
 		if err != nil {

@@ -61,31 +61,33 @@ func (rCtx *RuntimeContext) Run() {
 	if err != nil {
 		log.Fatalf("server.New: %v", err)
 	}
-	slog.Info("server running", "port", rCtx.Cfg.HTTPServer.Port)
 
 	err = srv.ServeHTTPHandler(ctx, rCtx.SetupRoutes(ctx))
 	if err != nil {
 		log.Fatalf("ServeHTTPHandler: %v", err)
 	}
+
+	slog.Info("server running", "env", rCtx.Cfg.General.Env, "port", rCtx.Cfg.HTTPServer.Port)
+
 	done()
 
 	slog.Info("successful shutdown")
 }
 
 func (rCtx *RuntimeContext) SetupRoutes(ctx context.Context) http.Handler {
-	if slices.Contains([]string{"dev", "local"}, rCtx.Cfg.General.Stage) {
+	var mux *gin.Engine
+	if slices.Contains([]string{"local"}, rCtx.Cfg.General.Env) {
 		gin.SetMode(gin.DebugMode)
+		mux = gin.Default()
 	} else {
 		gin.SetMode(gin.ReleaseMode)
+		mux = gin.New()
 	}
-
-	// mux := gin.New()
-	mux := gin.Default()
 
 	// Recovery middleware recovers from any panics and writes a 500 if there was one.
 	mux.Use(gin.Recovery())
 
-	k8sProvider := providers.NewK8SProvider(rCtx.Cfg.General.Stage)
+	k8sProvider := providers.NewK8SProvider(rCtx.Cfg.General.Env)
 
 	httpHandler := handlers.NewHandler(
 		rCtx.Cfg,

@@ -11,8 +11,8 @@ concurrency:
   cancel-in-progress: true
 
 jobs:
-  deploy:
-    name: deploy
+  build-push:
+    name: docker-build-push
     runs-on: ubuntu-22.04
 
     steps:
@@ -38,6 +38,12 @@ jobs:
         username: ${{ secrets.DOCKERHUB_USERNAME }}
         password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+    - name: Get current time
+      uses: josStorer/get-current-time@v2
+      id: current-time
+      with:
+        format: YYYYMMDD-HH
+
     - name: Build and push
       uses: docker/build-push-action@v5
       with:
@@ -46,6 +52,7 @@ jobs:
           TAGS=k8sman
           BUILD_ID=${{ github.run_id }}
           BUILD_TAG=${{ steps.vars.outputs.docker_tag }}
+          BUILD_TIME="${{ steps.current-time.outputs.time }}"
         tags: ektowett/k8sman:${{ steps.vars.outputs.docker_tag }}
 
     - name: Notify slack of deploy status

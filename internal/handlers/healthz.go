@@ -28,8 +28,8 @@ func (h Handler) Healthz() func(c *gin.Context) {
 
 		c.JSON(http.StatusOK, map[string]interface{}{
 			"success":    true,
-			"env":        h.cfg.General.Stage,
-			"build_time": "1",
+			"env":        h.cfg.General.Env,
+			"build_time": buildinfo.BuildTime,
 			"build_id":   buildinfo.BuildID,
 			"build_tag":  buildinfo.BuildTag,
 			"time": map[string]interface{}{

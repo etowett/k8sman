@@ -32,6 +32,7 @@ func (h Handler) Deployments() func(c *gin.Context) {
 				"message":     message,
 				"deployments": deployments,
 			})
+			return
 		}
 
 		c.JSON(http.StatusOK, gin.H{
@@ -65,6 +66,7 @@ func (h Handler) Pods() func(c *gin.Context) {
 				"message": message,
 				"pods":    pods,
 			})
+			return
 		}
 
 		c.JSON(http.StatusOK, gin.H{

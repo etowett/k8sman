@@ -2,27 +2,10 @@ package config
 
 import (
 	"fmt"
-	"os"
 	"time"
 
 	"github.com/kelseyhightower/envconfig"
 )
-
-const (
-	StageTest    = "test"
-	StageLocal   = "local"
-	StageDev     = "dev"
-	StageStaging = "stage"
-	StageProd    = "prod"
-)
-
-func GetStage() string {
-	stage := os.Getenv("STAGE")
-	if len(stage) == 0 {
-		stage = StageLocal
-	}
-	return stage
-}
 
 type ServiceConfig struct {
 	General    General
@@ -30,11 +13,8 @@ type ServiceConfig struct {
 }
 
 type General struct {
-	AppName      string `envconfig:"APP_NAME" default:"unknownapp"`
-	Stage        string `envconfig:"STAGE" default:"local"`
-	LogLevel     string `envconfig:"LOG_LEVEL" default:"info"`
-	Version      string `envconfig:"VERSION" default:"v0.0.1"`
-	ClientOrigin string `envconfig:"CLIENT_ORIGIN"`
+	Env      string `envconfig:"ENV" default:"local"`
+	LogLevel string `envconfig:"LOG_LEVEL" default:"info"`
 }
 
 type HTTPServer struct {
